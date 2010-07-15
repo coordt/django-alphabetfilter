@@ -1,0 +1,9 @@
+recursive-include doc_src *
+recursive-include docs *
+
+recursive-include alphafilter/media *
+recursive-include alphafilter/templates *
+
+include LICENSE
+include README
+include *.txt

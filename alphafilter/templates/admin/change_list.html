@@ -1,0 +1,19 @@
+{% extends "admin/change_list.html" %}
+{% load admin_list alphafilter %}
+{% block extrastyle %}
+{{block.super}}
+	<style type="text/css" media="screen">
+	.change-list ul.alphabetfilter li {
+		width: 1.1em;
+	}
+	.inactive {
+		color: #999;
+	}
+	.selected {
+		border: 1px solid #000;
+		padding: .3em;
+		color: red;
+	}
+	</style>
+{% endblock %}
+{% block date_hierarchy %}{% date_hierarchy cl %}{% alphabet cl %}{% endblock %}
