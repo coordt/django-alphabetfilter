@@ -3,6 +3,19 @@ from django.template import Library
 
 register = Library()
 
+def _get_default_letters():
+    from django.conf import settings
+    import string
+    
+    default_letters = getattr(settings, 'DEFAULT_ALPHABET', string.digits + string.ascii_uppercase)
+    if isinstance(default_letters, unicode):
+        return set([x for x in default_letters])
+    elif isinstance(default_letters, str):
+        return set([x for x in default_letters.decode('utf8')])
+    elif isinstance(default_letters, (tuple, list)):
+        return set(default_letters)
+
+
 def _get_available_letters(field_name, db_table):
     from django.db import connection, transaction
     from django.conf import settings
@@ -12,7 +25,7 @@ def _get_available_letters(field_name, db_table):
     cursor = connection.cursor()
     cursor.execute(sql)
     rows = cursor.fetchall() or ()
-    return set([row[0] for row in rows])
+    return set([row[0] for row in rows if row[0] is not None])
 
 
 def alphabet(cl):
@@ -23,9 +36,8 @@ def alphabet(cl):
     alpha_lookup = cl.params.get(alpha_field, '')
     link = lambda d: cl.get_query_string(d)
     
-    import string
     letters_used = _get_available_letters(field_name, cl.model._meta.db_table)
-    all_letters = list(set([x for x in string.uppercase+string.digits]) | letters_used)
+    all_letters = list(_get_default_letters() | letters_used)
     all_letters.sort()
     
     choices = [{
