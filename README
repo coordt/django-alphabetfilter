@@ -1,0 +1,72 @@
+==================
+Django AlphaFilter
+==================
+
+Django AlphaFilter was designed to work like Django's default ``date_hierarchy`` admin filter. It puts an clickable alphabet in the same location as the date hierarchy - at the top of the results list.
+
+
+Installation
+============
+
+1. The easiest method is to use ``pip`` or ``easy_install``\ ::
+
+	pip install django-alphafilter
+   
+   or
+   
+   ::
+
+	easy_install django-alphafilter
+
+2. If you download the source, you can install it by running the ``setup.py`` script::
+
+	cd /path/to/django-alphafilter/
+	python setup.py install
+
+3. Add ``'alphafilter'`` to your project's ``settings.py`` file, so Django will find the templates and template tag.
+
+Default Alphabet
+================
+
+The default alphabet is the list of characters displayed in the admin even if there is no data for that character. As there is data, the letters of the alphabet are enabled. Any characters not in the default alphabet, but that exist in the data, are added dynamically.
+
+Due to issues regarding devising the proper alphabet by language, the default alphabet is a setting named ``DEFAULT_ALPHABET``\ . The default setting is the ASCII alphabet and digits. You can set the ``DEFAULT_ALPHABET`` to a string or list or tuple.
+
+If you only what the ASCII characters, no digits::
+
+	DEFAULT_ALPHABET = u'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+For the German alphabet::
+
+	DEFAULT_ALPHABET = u'0123456789A\xc4BCDEFGHIJKLMNO\xd6PQRS\xdfTU\xdcVWXYZ'
+
+For the Icelandic alphabet::
+
+	DEFAULT_ALPHABET = u'0123456789A\xc1BD\xd0E\xc9FGHI\xcdJKLMNO\xd3PRSTU\xdaVXY\xdd\xde\xd6'
+
+The ordering of the alphabet will not stay the same as entered, it is sorted through Python's list sort method.
+
+Using Alphabet Filter on a Model
+================================
+
+In the model's ``admin.py`` set ``alphabet_filter`` to the name of a character field. For example::
+
+	alphabet_filter = 'name'
+
+You also have to create a template for the model (or application) that will override the admin's ``change_list.html`` template.
+
+Within your project's template directory, you need to create an ``admin`` directory, and a directory with the name of the application, and optionally the name of the model. For example, if you were adding the filter on the ``Tag`` model of an application named ``cooltags``\ , the directory structure would look like::
+
+	MyProject
+	    templates
+	        admin
+	            cooltags
+	                tag
+
+Create a document named ``change_list.html`` and put it in either the application (``templates/admin/cooltags``\ ) directory, to have it work for every model within that application or put it in the model directory (``templates/admin/cooltags/tag``\ ) to have it work only for that model.
+
+The change_list.html document should only contain one line::
+
+	{% extends "alphafilter/change_list.html" %}
+
+.. note:: You **cannot** place this template in the ``admin`` directory, as it leads to an infinite loop of inheritance.
