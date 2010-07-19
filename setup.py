@@ -10,7 +10,7 @@ def read_file(filename):
         return ''
 
 setup(
-    name = "alphafilter",
+    name = "django-alphafilter",
     version = __import__('alphafilter').get_version().replace(' ', '-'),
     url = '',
     author = 'coordt',
