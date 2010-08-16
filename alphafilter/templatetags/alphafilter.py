@@ -3,12 +3,15 @@ from django.template import Library
 
 register = Library()
 
-def _get_default_letters():
+def _get_default_letters(model_admin=None):
     from django.conf import settings
     import string
-    
     default_letters = getattr(settings, 'DEFAULT_ALPHABET', string.digits + string.ascii_uppercase)
-    if isinstance(default_letters, unicode):
+    if model_admin and hasattr(model_admin, 'DEFAULT_ALPHABET'):
+        default_letters = model_admin.DEFAULT_ALPHABET
+    if callable(default_letters):
+        return set(default_letters())
+    elif isinstance(default_letters, unicode):
         return set([x for x in default_letters])
     elif isinstance(default_letters, str):
         return set([x for x in default_letters.decode('utf8')])
@@ -37,7 +40,7 @@ def alphabet(cl):
     link = lambda d: cl.get_query_string(d)
     
     letters_used = _get_available_letters(field_name, cl.model._meta.db_table)
-    all_letters = list(_get_default_letters() | letters_used)
+    all_letters = list(_get_default_letters(cl.model_admin) | letters_used)
     all_letters.sort()
     
     choices = [{

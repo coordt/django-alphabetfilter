@@ -4,6 +4,12 @@ Django AlphaFilter
 
 Django AlphaFilter was designed to work like Django's default ``date_hierarchy`` admin filter. It puts an clickable alphabet in the same location as the date hierarchy - at the top of the results list.
 
+**Changes in 0.3:** 
+
+* The ``ModelAdmin`` class can now specify its own ``DEFAULT_ALPHABET`` to use instead of the global setting.
+
+* ``DEFAULT_ALPHABET`` can now be a callable
+
 
 Installation
 ============
@@ -30,7 +36,7 @@ Default Alphabet
 
 The default alphabet is the list of characters displayed in the admin even if there is no data for that character. As there is data, the letters of the alphabet are enabled. Any characters not in the default alphabet, but that exist in the data, are added dynamically.
 
-Due to issues regarding devising the proper alphabet by language, the default alphabet is a setting named ``DEFAULT_ALPHABET``\ . The default setting is the ASCII alphabet and digits. You can set the ``DEFAULT_ALPHABET`` to a string or list or tuple.
+Due to issues regarding devising the proper alphabet by language, the default alphabet is a setting named ``DEFAULT_ALPHABET``\ . The default setting is the ASCII alphabet and digits. You can set the ``DEFAULT_ALPHABET`` to a string, list, tuple or callable.
 
 If you only what the ASCII characters, no digits::
 
@@ -43,6 +49,17 @@ For the German alphabet::
 For the Icelandic alphabet::
 
 	DEFAULT_ALPHABET = u'0123456789A\xc1BD\xd0E\xc9FGHI\xcdJKLMNO\xd3PRSTU\xdaVXY\xdd\xde\xd6'
+
+You can override the ``DEFAULT_ALPHABET`` on a model-by-model basis by adding a ``DEFAULT_ALPHABET`` attribute to your ``ModelAdmin`` class like so::
+
+	class TestNameAdmin(admin.ModelAdmin):
+	    model = TestName
+	    alphabet_filter = 'sorted_name'
+    
+	    # A blank string only shows the characters in the database 	
+	    DEFAULT_ALPHABET = u''
+    
+
 
 The ordering of the alphabet will not stay the same as entered, it is sorted through Python's list sort method.
 
