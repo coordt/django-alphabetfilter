@@ -11,6 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
    :glob:
+   installation
+   getting_started
+   default_alphabet
+   reference/index
 
 
 Indices and tables
