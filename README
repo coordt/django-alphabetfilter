@@ -4,6 +4,12 @@ Django AlphaFilter
 
 Django AlphaFilter was designed to work like Django's default ``date_hierarchy`` admin filter. It puts an clickable alphabet in the same location as the date hierarchy - at the top of the results list.
 
+**Changes in 0.4:**
+
+* Added the ability to specify a 3rd-party application to apply the alphabet filter without having to modify that code (e.g. ``django.contrib.auth``\ ). The ``ALPHAFILTER_ADMIN_FIELDS`` setting is used for this.
+
+* Now includes documentation!
+
 **Changes in 0.3:** 
 
 * The ``ModelAdmin`` class can now specify its own ``DEFAULT_ALPHABET`` to use instead of the global setting.
@@ -18,9 +24,7 @@ Installation
 
 	pip install django-alphafilter
    
-   or
-   
-   ::
+   or ::
 
 	easy_install django-alphafilter
 

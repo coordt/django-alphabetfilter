@@ -1,0 +1,130 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Default Alphabet &mdash; Django AlphaFilter v0.4 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Django AlphaFilter v0.4 documentation" href="index.html" />
+    <link rel="next" title="Reference" href="reference/index.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+  </head>
+  <body>
+<div id="docstitle">
+	<p>Django AlphaFilter v0.4 documentation</p>
+</div>
+<div id="header">
+	<div id="title"><h1>The Default Alphabet</h1></div>
+	<ul id="headerButtons">
+		<li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+		<li id="page_buttons">
+			<div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
+			<div class="headerButton"><a href="reference/index.html" title="Reference" accesskey="N">next</a></div>
+			<div class="headerButton"><a href="getting_started.html" title="Getting Started" accesskey="P">previous</a></div>
+		</li>
+	</ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+	<ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
+	<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">The Default Alphabet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#changing-the-default-alphabet">Changing the Default Alphabet</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a></li>
+</ul>
+
+    <div id="searchbox" style="display: none">
+      
+        <form class="search" action="search.html" method="get">
+			<div class="search-wrapper">
+			<span class="search-left"></span>
+			<input class="prettysearch" type="text" name="q" size="18" />
+			<span class="search-right">&nbsp;</span>
+			</div>
+          <input type="submit" value="Search" class="searchbutton" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+        <p class="searchtip" style="font-size: 90%">
+        Enter search terms or a module, class or function name.
+        </p>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-default-alphabet">
+<h1>The Default Alphabet<a class="headerlink" href="#the-default-alphabet" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">django-alphafilter</span></tt> will always show the letters that are filterable based on data in the model, regardless of the language or encoding. It also displays, by default, the ASCII alphabet and digits as disabled characters.</p>
+<img alt="The default alphabet displayed with the 'C' character enabled and all other characters disabled." class="align-right" src="_images/defaultalphabet.png" style="width: 711px; height: 161px;" />
+<div class="section" id="changing-the-default-alphabet">
+<h2>Changing the Default Alphabet<a class="headerlink" href="#changing-the-default-alphabet" title="Permalink to this headline">¶</a></h2>
+<p>The configuration setting <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> can be a string, tuple, list or callable that returns a string, list or tuple.</p>
+<p>If you only what the ASCII characters, no digits:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DEFAULT_ALPHABET</span> <span class="o">=</span> <span class="s">u&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;</span>
+</pre></div>
+</div>
+<p>For the German alphabet:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DEFAULT_ALPHABET</span> <span class="o">=</span> <span class="s">u&#39;0123456789A</span><span class="se">\xc4</span><span class="s">BCDEFGHIJKLMNO</span><span class="se">\xd6</span><span class="s">PQRS</span><span class="se">\xdf</span><span class="s">TU</span><span class="se">\xdc</span><span class="s">VWXYZ&#39;</span>
+</pre></div>
+</div>
+<p>For the Icelandic alphabet:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DEFAULT_ALPHABET</span> <span class="o">=</span> <span class="s">u&#39;0123456789A</span><span class="se">\xc1</span><span class="s">BD</span><span class="se">\xd0</span><span class="s">E</span><span class="se">\xc9</span><span class="s">FGHI</span><span class="se">\xcd</span><span class="s">JKLMNO</span><span class="se">\xd3</span><span class="s">PRSTU</span><span class="se">\xda</span><span class="s">VXY</span><span class="se">\xdd\xde\xd6</span><span class="s">&#39;</span>
+</pre></div>
+</div>
+<p>To show nothing except the characters in the data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DEFAULT_ALPHABET</span> <span class="o">=</span> <span class="s">u&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Add <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> to the project&#8217;s <tt class="docutils literal"><span class="pre">settings.py</span></tt> to for a global change.</p>
+<p>Add a <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> attribute on your model to change it on a model-by-model basis.</p>
+</div>
+</div>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2010, Corey Oordt.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.2.
+	</p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+	<div id="breadcrumbs">
+		The Default Alphabet
+		</ul>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="_static/toc.js"></script>
+  </body>
+</html>

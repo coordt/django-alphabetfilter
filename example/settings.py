@@ -85,3 +85,8 @@ INSTALLED_APPS = (
     'alphafilter',
     'testtags',
 )
+
+ALPHAFILTER_ADMIN_FIELDS = {
+'auth.user': 'username',
+'auth.group':'name',
+}

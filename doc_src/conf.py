@@ -39,8 +39,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'alphafilter'
-copyright = u'2010, coordt'
+project = u'Django AlphaFilter'
+copyright = u'2010, Corey Oordt'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

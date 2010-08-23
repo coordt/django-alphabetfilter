@@ -1,0 +1,123 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Settings &mdash; Django AlphaFilter v0.4 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Django AlphaFilter v0.4 documentation" href="../index.html" />
+    <link rel="up" title="Reference" href="index.html" />
+    <link rel="prev" title="Reference" href="index.html" /> 
+  </head>
+  <body>
+<div id="docstitle">
+	<p>Django AlphaFilter v0.4 documentation</p>
+</div>
+<div id="header">
+	<div id="title"><h1>Settings</h1></div>
+	<ul id="headerButtons">
+		<li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+		<li id="page_buttons">
+			<div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+			<div class="headerButton"><a href="index.html" title="Reference" accesskey="P">previous</a></div>
+		</li>
+	</ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+	<ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+	<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../default_alphabet.html">The Default Alphabet</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Settings</a></li>
+</ul>
+</li>
+</ul>
+
+    <div id="searchbox" style="display: none">
+      
+        <form class="search" action="../search.html" method="get">
+			<div class="search-wrapper">
+			<span class="search-left"></span>
+			<input class="prettysearch" type="text" name="q" size="18" />
+			<span class="search-right">&nbsp;</span>
+			</div>
+          <input type="submit" value="Search" class="searchbutton" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+        <p class="searchtip" style="font-size: 90%">
+        Enter search terms or a module, class or function name.
+        </p>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="settings">
+<h1>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="default-alphabet">
+<h2>DEFAULT_ALPHABET<a class="headerlink" href="#default-alphabet" title="Permalink to this headline">¶</a></h2>
+<p>This setting is used to display characters in the admin interface no matter what the data may contain. Characters are always displayed if they are in the data, but not in the <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> can be a <tt class="docutils literal"><span class="pre">string</span></tt>, <tt class="docutils literal"><span class="pre">list</span></tt> of <tt class="docutils literal"><span class="pre">string</span></tt>s, a <tt class="docutils literal"><span class="pre">tuple</span></tt> of <tt class="docutils literal"><span class="pre">string</span></tt>s, or a callable (a function or class instance with a <tt class="docutils literal"><span class="pre">__call__</span></tt> method) that returns one of the previous types.</p>
+<p><tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> defaults to the <tt class="docutils literal"><span class="pre">string.ascii_uppercase</span></tt> + <tt class="docutils literal"><span class="pre">string.digits</span></tt>. Globally change this value by setting it in your <tt class="docutils literal"><span class="pre">settings.py</span></tt> file, or change it on a single model by setting it in the model&#8217;s <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt>.</p>
+</div>
+<div class="section" id="alphafilter-admin-fields">
+<h2>ALPHAFILTER_ADMIN_FIELDS<a class="headerlink" href="#alphafilter-admin-fields" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">ALPHAFILTER_ADMIN_FIELDS</span></tt> setting is a dictionary in the form of <tt class="docutils literal"><span class="pre">{'&lt;appname&gt;.&lt;modelname&gt;':</span> <span class="pre">'&lt;fieldname&gt;',</span> <span class="pre">[</span> <span class="pre">...</span> <span class="pre">]</span> <span class="pre">}</span></tt></p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ALPHAFILTER_ADMIN_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;auth.user&#39;</span><span class="p">:</span> <span class="s">&#39;username&#39;</span><span class="p">,</span>
+    <span class="s">&#39;auth.group&#39;</span><span class="p">:</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2010, Corey Oordt.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.2.
+	</p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+	<div id="breadcrumbs">
+		<a href="index.html" accesskey="U">Reference</a><img src="../_static/triangle_closed.png" height="9" width="9" alt="&gt;">
+		Settings
+		</ul>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="../_static/toc.js"></script>
+  </body>
+</html>
