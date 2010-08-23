@@ -2,7 +2,7 @@ from django.db.models import get_model
 from django.contrib import admin
 from django.conf import settings
 
-MODEL_REGISTRY = getattr(settings, 'ALPHAFILTER_ADMIN_FIELDS', ())
+MODEL_REGISTRY = getattr(settings, 'ALPHAFILTER_ADMIN_FIELDS', {})
 FIELDS = {}
 
 for key, val in MODEL_REGISTRY.items():
