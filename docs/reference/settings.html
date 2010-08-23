@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Settings &mdash; Django AlphaFilter v0.3 documentation</title>
+    <title>Settings &mdash; Django AlphaFilter v0.4 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3',
+        VERSION:     '0.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,13 +21,13 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Django AlphaFilter v0.3 documentation" href="../index.html" />
+    <link rel="top" title="Django AlphaFilter v0.4 documentation" href="../index.html" />
     <link rel="up" title="Reference" href="index.html" />
     <link rel="prev" title="Reference" href="index.html" /> 
   </head>
   <body>
 <div id="docstitle">
-	<p>Django AlphaFilter v0.3 documentation</p>
+	<p>Django AlphaFilter v0.4 documentation</p>
 </div>
 <div id="header">
 	<div id="title"><h1>Settings</h1></div>
@@ -86,7 +86,18 @@
 <h2>DEFAULT_ALPHABET<a class="headerlink" href="#default-alphabet" title="Permalink to this headline">¶</a></h2>
 <p>This setting is used to display characters in the admin interface no matter what the data may contain. Characters are always displayed if they are in the data, but not in the <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt>.</p>
 <p>The <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> can be a <tt class="docutils literal"><span class="pre">string</span></tt>, <tt class="docutils literal"><span class="pre">list</span></tt> of <tt class="docutils literal"><span class="pre">string</span></tt>s, a <tt class="docutils literal"><span class="pre">tuple</span></tt> of <tt class="docutils literal"><span class="pre">string</span></tt>s, or a callable (a function or class instance with a <tt class="docutils literal"><span class="pre">__call__</span></tt> method) that returns one of the previous types.</p>
-<p><tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> defaults to the <tt class="docutils literal"><span class="pre">string.ascii_uppercase</span></tt> + <tt class="docutils literal"><span class="pre">string.digits</span></tt>. Globally change this value by setting it in your <tt class="docutils literal"><span class="pre">settings.py</span></tt> file, or change it on a single model by setting it in the model&#8217;s <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> defaults to the <tt class="docutils literal"><span class="pre">string.ascii_uppercase</span></tt> + <tt class="docutils literal"><span class="pre">string.digits</span></tt>. Globally change this value by setting it in your <tt class="docutils literal"><span class="pre">settings.py</span></tt> file, or change it on a single model by setting it in the model&#8217;s <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt>.</p>
+</div>
+<div class="section" id="alphafilter-admin-fields">
+<h2>ALPHAFILTER_ADMIN_FIELDS<a class="headerlink" href="#alphafilter-admin-fields" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">ALPHAFILTER_ADMIN_FIELDS</span></tt> setting is a dictionary in the form of <tt class="docutils literal"><span class="pre">{'&lt;appname&gt;.&lt;modelname&gt;':</span> <span class="pre">'&lt;fieldname&gt;',</span> <span class="pre">[</span> <span class="pre">...</span> <span class="pre">]</span> <span class="pre">}</span></tt></p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ALPHAFILTER_ADMIN_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;auth.user&#39;</span><span class="p">:</span> <span class="s">&#39;username&#39;</span><span class="p">,</span>
+    <span class="s">&#39;auth.group&#39;</span><span class="p">:</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 
