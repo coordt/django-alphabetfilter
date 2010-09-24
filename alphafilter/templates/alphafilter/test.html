@@ -1,0 +1,1 @@
+{% if choices %}{% for choice in choices %}[{% if choice.has_entries %}+{% endif %}{% if choice.active %}A{% endif %}{{ choice.title }}]{% endfor %}{% else %}NO ENTRIES{% endif %}
