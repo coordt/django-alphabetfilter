@@ -90,7 +90,6 @@ class AlphabetFilterNode(Node):
     def render(self, context):
         try:
             qset = self.qset.resolve(context)
-            
         except VariableDoesNotExist:
             raise TemplateSyntaxError("Can't resolve the queryset passed")
         try:
@@ -106,7 +105,9 @@ class AlphabetFilterNode(Node):
         
         if request is not None:
             alpha_lookup = request.GET.get(alpha_field, '')
-            qstring_items = request.GET.items()
+            qstring_items = request.GET.copy()
+            if alpha_field in qstring_items:
+                qstring_items.pop(alpha_field)
             qstring = "&amp;".join(["%s=%s" % (k, v) for k, v in qstring_items])
         else:
             alpha_lookup = ''
