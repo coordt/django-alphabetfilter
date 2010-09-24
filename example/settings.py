@@ -76,6 +76,14 @@ TEMPLATE_DIRS = (
     os.path.abspath(os.path.join(PROJ_ROOT, 'templates')),
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+)
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
