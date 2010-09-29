@@ -10,6 +10,7 @@ Contents:
    installation
    getting_started
    default_alphabet
+   templatetag
    reference/index
 
 

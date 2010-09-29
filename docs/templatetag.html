@@ -1,0 +1,236 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The qs_alphabet_filter Template Tag &mdash; Django AlphaFilter v0.5beta1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.5beta1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Django AlphaFilter v0.5beta1 documentation" href="index.html" />
+    <link rel="next" title="Reference" href="reference/index.html" />
+    <link rel="prev" title="The Default Alphabet" href="default_alphabet.html" /> 
+  </head>
+  <body>
+<div id="docstitle">
+	<p>Django AlphaFilter v0.5beta1 documentation</p>
+</div>
+<div id="header">
+	<div id="title"><h1>The qs_alphabet_filter Template Tag</h1></div>
+	<ul id="headerButtons">
+		<li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+		<li id="page_buttons">
+			<div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
+			<div class="headerButton"><a href="reference/index.html" title="Reference" accesskey="N">next</a></div>
+			<div class="headerButton"><a href="default_alphabet.html" title="The Default Alphabet" accesskey="P">previous</a></div>
+		</li>
+	</ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+	<ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
+	<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="default_alphabet.html">The Default Alphabet</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">The qs_alphabet_filter Template Tag</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a></li>
+</ul>
+
+    <div id="searchbox" style="display: none">
+      
+        <form class="search" action="search.html" method="get">
+			<div class="search-wrapper">
+			<span class="search-left"></span>
+			<input class="prettysearch" type="text" name="q" size="18" />
+			<span class="search-right">&nbsp;</span>
+			</div>
+          <input type="submit" value="Search" class="searchbutton" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+        <p class="searchtip" style="font-size: 90%">
+        Enter search terms or a module, class or function name.
+        </p>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-qs-alphabet-filter-template-tag">
+<h1>The qs_alphabet_filter Template Tag<a class="headerlink" href="#the-qs-alphabet-filter-template-tag" title="Permalink to this headline">¶</a></h1>
+<p>If you wanted to have an alphabet filter in a regular template, the <tt class="docutils literal"><span class="pre">qs_alphabet_filter</span></tt> template tag will generate this for you.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Make sure that Django&#8217;s <tt class="docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt> setting in your <tt class="docutils literal"><span class="pre">settings.py</span></tt> includes <tt class="docutils literal"><span class="pre">django.core.context_processors.request</span></tt>, which is not included by default.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&quot;django.core.context_processors.auth&quot;</span><span class="p">,</span>
+    <span class="s">&quot;django.core.context_processors.debug&quot;</span><span class="p">,</span>
+    <span class="s">&quot;django.core.context_processors.i18n&quot;</span><span class="p">,</span>
+    <span class="s">&quot;django.core.context_processors.media&quot;</span><span class="p">,</span>
+    <span class="s">&quot;django.core.context_processors.request&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Without this context processor, the template tag will have no idea which letter was clicked on and can&#8217;t display the currently selected letter.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Within your template, load the template tag library and use the <tt class="docutils literal"><span class="pre">qs_alphabet_filter</span></tt> tag, with at least two parameters: the variable containing the QuerySet and the name (or variable containing the name) of the field to apply the alphabet filter.</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">alphafilter</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">qs_alphabet_filter</span> <span class="nv">objects</span> <span class="nv">last_name</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>With two parameters, the default template <tt class="docutils literal"><span class="pre">alphafilter/alphabet.html</span></tt> is used to render the selection. You may pass a third parameter for your own template (but you can simply override the default).</p>
+<p>There are three other things that you may need: the alphabet filter template, CSS styles, and a view that returns a filtered QuerySet to display the results.</p>
+<div class="section" id="alphabet-filter-template">
+<h3>Alphabet Filter Template<a class="headerlink" href="#alphabet-filter-template" title="Permalink to this headline">¶</a></h3>
+<p>The template tag allows you to specify the template that is specifically rendered, but the default is <tt class="docutils literal"><span class="pre">alphafilter/alphabet.html</span></tt> and should fit most needs.</p>
+<p>For those of you who are more adventurous, the context of the template includes:</p>
+<dl class="docutils">
+<dt>choices</dt>
+<dd><p class="first">A list of dictionaries containing all the choices to display. This will include all letters of the <tt class="docutils literal"><span class="pre">DEFAULT_ALPHABET</span></tt> setting as well as additional letters contained within the data, and an item to display all of the items.</p>
+<p class="last">This list is sorted with the &#8220;All&#8221; item first, and the other items sorted in alphabetical order.</p>
+</dd>
+</dl>
+<p>Each list item dictionary contains:</p>
+<dl class="docutils">
+<dt>has_entries</dt>
+<dd>True if the letter has entries in the data set.</dd>
+<dt>link</dt>
+<dd>The HTML link for the choice, typically rendered as the <tt class="docutils literal"><span class="pre">href</span></tt> of an <tt class="docutils literal"><span class="pre">&lt;a&gt;</span></tt> tag. For example: <tt class="docutils literal"><span class="pre">&lt;a</span> <span class="pre">href=&quot;{{</span> <span class="pre">choice.link</span> <span class="pre">}}&quot;&gt;</span></tt></dd>
+<dt>title</dt>
+<dd>The name of the letter, or (localizable) &#8220;All&#8221;</dd>
+<dt>active</dt>
+<dd>This letter is currently selected.</dd>
+</dl>
+<p>The default template looks something like:</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">choices</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;ul class=&quot;alphabetfilter&quot;&gt;</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">choice</span> <span class="k">in</span> <span class="nv">choices</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        &lt;li&gt;</span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">choice.has_entries</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            &lt;a href=&quot;</span><span class="cp">{{</span> <span class="nv">choice.link</span> <span class="cp">}}</span><span class="x">&quot;&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            &lt;span class=&quot;inactive&quot;&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">choice.active</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            &lt;span class=&quot;selected&quot;&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        </span><span class="cp">{{</span> <span class="nv">choice.title</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">choice.active</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            &lt;/span&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">choice.has_entries</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            &lt;/a&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            &lt;/span&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        &lt;/li&gt;</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;/ul&gt;</span>
+<span class="x">    &lt;br class=&quot;clear&quot; /&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="css-styles">
+<h3>CSS Styles<a class="headerlink" href="#css-styles" title="Permalink to this headline">¶</a></h3>
+<p>For convenience, a template is included for some basic CSS styling, simply include <tt class="docutils literal"><span class="pre">alphafilter/alphafilter_styles.html</span></tt> in the appropriate place in your template:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-Type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>AlphaFilter Test<span class="nt">&lt;/title&gt;</span>
+
+    {% include &quot;alphafilter/alphafilter_styles.html&quot; %}
+
+<span class="nt">&lt;/head&gt;</span>
+</pre></div>
+</div>
+<p>You can also override the template in your project by simply creating a file called <tt class="docutils literal"><span class="pre">alphafilter_styles.html</span></tt> within a directory named <tt class="docutils literal"><span class="pre">alphafilter</span></tt> inside your projects templates directory.</p>
+<p>The default styles are:</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="o">&lt;</span><span class="nt">style</span> <span class="nt">type</span><span class="o">=</span><span class="s2">&quot;text/css&quot;</span> <span class="nt">media</span><span class="o">=</span><span class="s2">&quot;screen&quot;</span><span class="o">&gt;</span>
+<span class="nt">ul</span><span class="nc">.alphabetfilter</span> <span class="p">{</span>
+    <span class="k">list-style</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+    <span class="k">display</span><span class="o">:</span> <span class="k">inline</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">ul</span><span class="nc">.alphabetfilter</span> <span class="nt">li</span> <span class="p">{</span>
+    <span class="k">width</span><span class="o">:</span> <span class="m">0.7em</span><span class="p">;</span>
+    <span class="k">display</span><span class="o">:</span> <span class="k">inline</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.inactive</span> <span class="p">{</span>
+    <span class="k">color</span><span class="o">:</span> <span class="m">#999</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.selected</span> <span class="p">{</span>
+    <span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-view">
+<h3>The View<a class="headerlink" href="#the-view" title="Permalink to this headline">¶</a></h3>
+<p>Django AlphaFilter includes a generic view named <tt class="docutils literal"><span class="pre">alphafilter.views.alphafilter</span></tt> that is useful as an example, but might not be very useful for all situations.</p>
+<p>The view needs to do two things: look for the filter in <tt class="docutils literal"><span class="pre">request.GET</span></tt>and add a filtered QuerySet in the context for rendering the template. The template can then iterate through the QuerySet to display the results.</p>
+<p>The example view accepts an HttpRequest, a QuerySet, and a template name. It finds the filter by looking for a key in the GET parameters containing &#8216;__istartswith&#8217;, and uses that to filter the QuerySet. The filtered QuerySet is passed into the context as &#8216;objects&#8217;.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">alphafilter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+    <span class="n">qs_filter</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s">&#39;__istartswith&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">qs_filter</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span>
+        <span class="n">template</span><span class="p">,</span>
+        <span class="p">{</span><span class="s">&#39;objects&#39;</span><span class="p">:</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">qs_filter</span><span class="p">)},</span>
+        <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2010, Corey Oordt.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.2.
+	</p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+	<div id="breadcrumbs">
+		The qs_alphabet_filter Template Tag
+		</ul>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="_static/toc.js"></script>
+  </body>
+</html>

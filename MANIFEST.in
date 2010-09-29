@@ -7,3 +7,5 @@ recursive-include alphafilter/templates *
 include LICENSE
 include README
 include *.txt
+
+prune example
