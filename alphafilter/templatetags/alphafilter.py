@@ -16,7 +16,8 @@ def _get_default_letters(model_admin=None):
     """
     from django.conf import settings
     import string
-    default_letters = getattr(settings, 'DEFAULT_ALPHABET', string.digits + string.ascii_uppercase)
+    default_ltrs = string.digits + string.ascii_uppercase
+    default_letters = getattr(settings, 'DEFAULT_ALPHABET', default_ltrs)
     if model_admin and hasattr(model_admin, 'DEFAULT_ALPHABET'):
         default_letters = model_admin.DEFAULT_ALPHABET
     if callable(default_letters):
@@ -82,7 +83,8 @@ class AlphabetFilterNode(Node):
     
     {% qs_alphabet_filter objects "lastname" "myapp/template.html" %}
     """
-    def __init__(self, qset, field_name, template_name="alphafilter/alphabet.html"):
+    def __init__(self, qset, field_name, 
+        template_name="alphafilter/alphabet.html"):
         self.qset = Variable(qset)
         self.field_name = Variable(field_name)
         self.template_name = Variable(template_name)
@@ -114,7 +116,9 @@ class AlphabetFilterNode(Node):
             qstring = ''
         
         link = lambda d: "?%s%s" % (qstring, "%s=%s" % d.items()[0])
-        letters_used = _get_available_letters(field_name, qset.model._meta.db_table)
+        letters_used = _get_available_letters(
+                            field_name, 
+                            qset.model._meta.db_table)
         all_letters = list(_get_default_letters(None) | letters_used)
         all_letters.sort()
         
@@ -156,4 +160,5 @@ def qs_alphabet_filter(parser, token):
     elif len(bits) == 4:
         return AlphabetFilterNode(bits[1], bits[2], bits[3])
     else:
-        raise TemplateSyntaxError("%s is called with a queryset and field name, and optionally a template." % bits[0])
+        raise TemplateSyntaxError("%s is called with a queryset and field "
+            "name, and optionally a template." % bits[0])
