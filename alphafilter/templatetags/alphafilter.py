@@ -69,7 +69,7 @@ def alphabet(cl):
         'active': letter == alpha_lookup,
         'has_entries': letter in letters_used,} for letter in all_letters]
     all_letters = [{
-        'link': cl.get_query_string(None,alpha_field),
+        'link': cl.get_query_string(None, [alpha_field]),
         'title': _('All'),
         'active': '' == alpha_lookup,
         'has_entries': True
