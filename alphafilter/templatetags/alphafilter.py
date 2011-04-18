@@ -124,7 +124,10 @@ class AlphabetFilterNode(Node):
                             field_name, 
                             qset.model._meta.db_table)
         else:
-            letters_used = set([getattr(row,field_name)[0] for row in qset])
+            letters = [getattr(row,field_name)[0] for row in qset]
+            if alpha_lookup == '' and letters is not None:
+                alpha_lookup = letters[0]
+            letters_used = set(letters)
 
         all_letters = list(_get_default_letters(None) | letters_used)
         all_letters.sort()
