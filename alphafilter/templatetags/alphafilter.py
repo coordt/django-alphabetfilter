@@ -58,8 +58,9 @@ def alphabet(cl):
     alpha_field = '%s__istartswith' % field_name
     alpha_lookup = cl.params.get(alpha_field, '')
     link = lambda d: cl.get_query_string(d)
+    db_table = getattr(cl.model_admin, 'alphabet_filter_table', cl.model._meta.db_table)
     
-    letters_used = _get_available_letters(field_name, cl.model._meta.db_table)
+    letters_used = _get_available_letters(field_name, db_table)
     all_letters = list(_get_default_letters(cl.model_admin) | letters_used)
     all_letters.sort()
     
