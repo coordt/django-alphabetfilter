@@ -24,6 +24,7 @@ setup(
     license = 'Apache 2.0',
     include_package_data = True,
     install_requires=read_file('requirements.txt'),
+    zip_safe = False,
     classifiers = [
     ],
 )
