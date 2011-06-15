@@ -19,7 +19,7 @@ setup(
     author = 'Corey Oordt',
     author_email = 'coreyoordt@gmail.com',
     description = DESC,
-    long_description = read_file('README'),
+    long_description = read_file('README.rst'),
     packages = find_packages(),
     license = 'Apache 2.0',
     include_package_data = True,

@@ -1,7 +1,7 @@
 <div class="xfull">
 <ul class="toplinks alphabetfilter">
 {% for choice in choices %}
-<li>{% if choice.has_entries %}<a href="{{ choice.link }}">{% else %}<span class="inactive">{% endif %}{% if choice.active %}<span class="selected">{% endif %}{{ choice.title }}{% if choice.active %}</span>{% endif %}{% if choice.has_entries %}</a>{% else %}</span>{% endif %}</li>
+<li{% if forloop.first %} class="first"{% endif %}>{% if choice.has_entries %}<a href="{{ choice.link }}">{% else %}<span class="inactive">{% endif %}{% if choice.active %}<span class="selected">{% endif %}{{ choice.title }}{% if choice.active %}</span>{% endif %}{% if choice.has_entries %}</a>{% else %}</span>{% endif %}</li>
 {% endfor %}
 </ul><br class="clear" />
 </div>
