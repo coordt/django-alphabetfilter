@@ -113,12 +113,12 @@ class AlphabetFilterNode(Node):
             qstring_items = request.GET.copy()
             if alpha_field in qstring_items:
                 qstring_items.pop(alpha_field)
-            qstring = "&amp;".join(["%s=%s" % (k, v) for k, v in qstring_items])
+            qstring = "&amp;".join(["%s=%s" % (k, v) for k, v in qstring_items.iteritems()])
         else:
             alpha_lookup = ''
             qstring = ''
         
-        link = lambda d: "?%s%s" % (qstring, "%s=%s" % d.items()[0])
+        link = lambda d: "?%s&amp;%s" % (qstring, "%s=%s" % d.items()[0])
         if self.filtered == None:
             letters_used = _get_available_letters(
                             field_name, 
