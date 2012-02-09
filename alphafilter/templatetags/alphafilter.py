@@ -113,6 +113,10 @@ class AlphabetFilterNode(Node):
             qstring_items = request.GET.copy()
             if alpha_field in qstring_items:
                 qstring_items.pop(alpha_field)
+            # Don't extend pagination to new alphafilters, it should start
+            # always from the beginning
+            if 'page' in qstring_items:
+                qstring_items.pop('page')
             qstring = "&amp;".join(["%s=%s" % (k, v) for k, v in qstring_items.iteritems()])
         else:
             alpha_lookup = ''
