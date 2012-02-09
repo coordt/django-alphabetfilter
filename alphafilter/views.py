@@ -27,6 +27,13 @@ def alphafilter(request, queryset, template):
 
 if ListView is not None:
     class AlphafilterListView(ListView):
+        """
+        Generic list view that filters the queryset by the choosen letter.
+        The template name suffix for this views is _alfalist, so instead
+        app/model_list.html, use app/model_alfalist.html.
+        """
+        template_name_suffix = '_alfalist'
+
         def get_queryset(self):
             queryset = super(AlphafilterListView, self).get_queryset()
             
