@@ -1,7 +1,10 @@
+from __future__ import absolute_import
 from django.utils.translation import ugettext as _
 from django.template import (Library, Node, Variable, VariableDoesNotExist,
                             TemplateSyntaxError, RequestContext, Context)
 from django.template.loader import get_template
+
+from alphafilter import sql
 
 register = Library()
 
@@ -30,22 +33,15 @@ def _get_default_letters(model_admin=None):
         return set(default_letters)
 
 
-def _get_available_letters(field_name, db_table):
+def _get_available_letters(field_name, queryset):
     """
     Makes a query to the database to return the first character of each
     value of the field and table passed in.
     
     Returns a set that represents the letters that exist in the database.
     """
-    from django.db import connection
-    qn = connection.ops.quote_name
-    sql = "SELECT DISTINCT UPPER(SUBSTR(%s, 1, 1)) as letter FROM %s" \
-                % (qn(field_name), qn(db_table))
-    cursor = connection.cursor()
-    cursor.execute(sql)
-    rows = cursor.fetchall() or ()
-    return set([row[0] for row in rows if row[0] is not None])
-        
+    result = queryset.values(field_name).annotate(fl=sql.FirstLetter(field_name)).values('fl').distinct()
+    return set([res['fl'] for res in result if res['fl'] is not None])
 
 
 def alphabet(cl):
@@ -59,9 +55,8 @@ def alphabet(cl):
     alpha_field = '%s__istartswith' % field_name
     alpha_lookup = cl.params.get(alpha_field, '')
     link = lambda d: cl.get_query_string(d)
-    db_table = getattr(cl.model_admin, 'alphabet_filter_table', cl.model._meta.db_table)
-    
-    letters_used = _get_available_letters(field_name, db_table)
+
+    letters_used = _get_available_letters(field_name, cl.model.objects.all())
     all_letters = list(_get_default_letters(cl.model_admin) | letters_used)
     all_letters.sort()
     
@@ -124,9 +119,7 @@ class AlphabetFilterNode(Node):
         
         link = lambda d: "?%s&amp;%s" % (qstring, "%s=%s" % d.items()[0])
         if self.filtered == None:
-            letters_used = _get_available_letters(
-                            field_name, 
-                            qset.model._meta.db_table)
+            letters_used = _get_available_letters(field_name, qset)
         else:
             letters = [getattr(row,field_name)[0] for row in qset]
             if alpha_lookup == '' and letters is not None:
