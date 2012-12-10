@@ -20,8 +20,9 @@ def alphafilter(request, queryset, template):
             break
     
     return render_to_response(
-        template, 
-        {'objects': queryset.filter(**qs_filter)}, 
+        template,
+        {'objects': queryset.filter(**qs_filter),
+         'unfiltered_objects': queryset},
         context_instance=RequestContext(request)
     )
 
@@ -36,7 +37,10 @@ if ListView is not None:
 
         def get_queryset(self):
             queryset = super(AlphafilterListView, self).get_queryset()
-            
+            # store queryset witouth filters so it can be used to generate
+            # available letter list.
+            self.unfiltered_queryset = queryset
+
             qs_filter = {}
             for key in self.request.GET.keys():
                 if '__istartswith' in key:
@@ -44,3 +48,12 @@ if ListView is not None:
                     break
             
             return queryset.filter(**qs_filter)
+
+        def get_context_data(self, **kwargs):
+            """
+            Add 'unfiltered_queryset' variable to context with the original
+            queryset, before limiting to the selected letter.
+            """
+            context = super(AlphafilterListView, self).get_context_data(**kwargs)
+            context['unfiltered_queryset'] = self.unfiltered_queryset
+            return context

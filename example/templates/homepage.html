@@ -8,7 +8,7 @@
 	{% include "alphafilter/alphafilter_styles.html" %}
 </head>
 <body>
-{% qs_alphabet_filter objects last_name %}
+{% qs_alphabet_filter unfiltered_objects last_name %}
 {% for object in objects %}
 	{{ object.first_name }} {{ object.last_name}}
 {% endfor %}
