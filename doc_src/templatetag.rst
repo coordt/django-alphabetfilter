@@ -35,6 +35,9 @@ With two parameters, the default template ``alphafilter/alphabet.html`` is used 
 
 There are three other things that you may need: the alphabet filter template, CSS styles, and a view that returns a filtered QuerySet to display the results. 
 
+Notice that the queryset passed to the templatetag will be used to generate the list of availabe letters, so it can't be the same as the one used to display the list of filtered objects. Take a look to example project's ``homepage.html`` template and the views in ``Alphafilter.views``.
+
+
 Alphabet Filter Template
 ************************
 
@@ -152,7 +155,8 @@ The example view accepts an HttpRequest, a QuerySet, and a template name. It fin
 	    
 	    return render_to_response(
 	        template, 
-	        {'objects': queryset.filter(**qs_filter)}, 
+            {'objects': queryset.filter(**qs_filter),
+            'unfiltered_objects': queryset},
 	        context_instance=RequestContext(request)
 	    )
 
