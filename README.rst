@@ -4,6 +4,16 @@ Django AlphaFilter
 
 Django AlphaFilter was designed to work like Django's default ``date_hierarchy`` admin filter. It puts an clickable alphabet in the same location as the date hierarchy - at the top of the results list.
 
+**Changes in 0.7:**
+
+* Django 1.5 compatible.
+
+* Fall back to previous method of retrieving letters in Django 1.4, due to bug in Django's aggregation.
+
+* Fixed the encoding of "&" in the urls.
+
+* Added ``unfiltered_queryset`` to the context (Thanks to Ales Zabala Alava: https://github.com/shagi)
+
 **Changes in 0.6:**
 
 * Switched to Django querysets to retrieve letters. (Thanks to Ales Zabala Alava: https://github.com/shagi)

@@ -1,10 +1,11 @@
 from __future__ import absolute_import
+import django
 from django.utils.translation import ugettext as _
 from django.template import (Library, Node, Variable, VariableDoesNotExist,
                             TemplateSyntaxError, RequestContext, Context)
 from django.template.loader import get_template
 
-from alphafilter import sql
+from alphafilter.sql import FirstLetter
 
 register = Library()
 
@@ -41,8 +42,21 @@ def _get_available_letters(field_name, queryset):
 
     Returns a set that represents the letters that exist in the database.
     """
-    result = queryset.values(field_name).annotate(fl=sql.FirstLetter(field_name)).values('fl').distinct()
-    return set([res['fl'] for res in result if res['fl'] is not None])
+    if django.VERSION[1] != 4:
+        result = queryset.values(field_name).annotate(
+            fl=FirstLetter(field_name)
+            ).values('fl').distinct()
+        return set([res['fl'] for res in result if res['fl'] is not None])
+    else:
+        from django.db import connection
+        qn = connection.ops.quote_name
+        db_table = queryset.model._meta.db_table
+        sql = "SELECT DISTINCT UPPER(SUBSTR(%s, 1, 1)) as letter FROM %s" \
+                    % (qn(field_name), qn(db_table))
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall() or ()
+        return set([row[0] for row in rows if row[0] is not None])
 
 
 def alphabet(cl):
@@ -114,12 +128,12 @@ class AlphabetFilterNode(Node):
             # always from the beginning
             if 'page' in qstring_items:
                 qstring_items.pop('page')
-            qstring = "&amp;".join(["%s=%s" % (k, v) for k, v in qstring_items.iteritems()])
+            qstring = "&".join(["%s=%s" % (k, v) for k, v in qstring_items.iteritems()])
         else:
             alpha_lookup = ''
             qstring = ''
 
-        link = lambda d: "?%s&amp;%s" % (qstring, "%s=%s" % d.items()[0])
+        link = lambda d: "?%s&%s" % (qstring, "%s=%s" % d.items()[0])
         if self.filtered == None:
             letters_used = _get_available_letters(field_name, qset)
         else:
