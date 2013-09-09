@@ -97,11 +97,15 @@ class AlphabetFilterNode(Node):
     {% qs_alphabet_filter objects "lastname" "myapp/template.html" %}
     """
     def __init__(self, qset, field_name, filtered=None,
-        template_name="alphafilter/alphabet.html"):
+        template_name="alphafilter/alphabet.html", strip_params=None):
         self.qset = Variable(qset)
         self.field_name = Variable(field_name)
         self.template_name = Variable(template_name)
         self.filtered = filtered
+        if strip_params is None:
+            self.strip_params = []
+        else:
+            self.strip_params = strip_params.split(',')
 
     def render(self, context):
         try:
@@ -122,12 +126,11 @@ class AlphabetFilterNode(Node):
         if request is not None:
             alpha_lookup = request.GET.get(alpha_field, '')
             qstring_items = request.GET.copy()
-            if alpha_field in qstring_items:
-                qstring_items.pop(alpha_field)
-            # Don't extend pagination to new alphafilters, it should start
-            # always from the beginning
-            if 'page' in qstring_items:
-                qstring_items.pop('page')
+            self.strip_params.append(alpha_field)
+            self.strip_params.append('page')
+            for param in self.strip_params:
+                if param in qstring_items:
+                    qstring_items.pop(param)
             qstring = "&".join(["%s=%s" % (k, v) for k, v in qstring_items.iteritems()])
         else:
             alpha_lookup = ''
@@ -171,7 +174,7 @@ def qs_alphabet_filter(parser, token):
     """
     The parser/tokenizer for the queryset alphabet filter.
 
-    {% qs_alphabet_filter <queryset> <field name> [<template name>] %}
+    {% qs_alphabet_filter <queryset> <field name> [<template name>] [strip_params=comma,delim,list] %}
 
     {% qs_alphabet_filter objects lastname myapp/template.html %}
 
@@ -182,8 +185,13 @@ def qs_alphabet_filter(parser, token):
     if len(bits) == 3:
         return AlphabetFilterNode(bits[1], bits[2])
     elif len(bits) == 4:
-        return AlphabetFilterNode(bits[1], bits[2], template_name=bits[3])
+        if "=" in bits[3]:
+            key, val = bits[3].split('=')
+            return AlphabetFilterNode(bits[1], bits[2], strip_params=val)
+        else:
+            return AlphabetFilterNode(bits[1], bits[2], template_name=bits[3])
     elif len(bits) == 5:
+        key, val = bits[4].split('=')
         return AlphabetFilterNode(bits[1], bits[2], bits[3], bits[4])
     else:
         raise TemplateSyntaxError("%s is called with a queryset and field "

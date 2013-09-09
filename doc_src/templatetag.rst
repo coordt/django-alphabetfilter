@@ -33,7 +33,15 @@ Within your template, load the template tag library and use the ``qs_alphabet_fi
 
 With two parameters, the default template ``alphafilter/alphabet.html`` is used to render the selection. You may pass a third parameter for your own template (but you can simply override the default).
 
-There are three other things that you may need: the alphabet filter template, CSS styles, and a view that returns a filtered QuerySet to display the results. 
+You can also pass in a ``strip_params`` argument with a comma-delimited list of query parameters to strip out on the links for each letter. This is useful if you are using a search field as well as the alphabet filter on the same page.
+
+.. code-block:: django
+
+	{% load alphafilter %}
+	{% qs_alphabet_filter objects last_name strip_params=q %}
+
+
+There are three other things that you may need: the alphabet filter template, CSS styles, and a view that returns a filtered QuerySet to display the results.
 
 Notice that the queryset passed to the templatetag will be used to generate the list of availabe letters, so it can't be the same as the one used to display the list of filtered objects. Take a look to example project's ``homepage.html`` template and the views in ``Alphafilter.views``.
 
@@ -47,12 +55,12 @@ For those of you who are more adventurous, the context of the template includes:
 
 choices
 	A list of dictionaries containing all the choices to display. This will include all letters of the ``DEFAULT_ALPHABET`` setting as well as additional letters contained within the data, and an item to display all of the items.
-	
+
 	This list is sorted with the "All" item first, and the other items sorted in alphabetical order.
 
 
 Each list item dictionary contains:
-	
+
 has_entries
 	True if the letter has entries in the data set.
 
@@ -106,9 +114,9 @@ For convenience, a template is included for some basic CSS styling, simply inclu
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <title>AlphaFilter Test</title>
-	    
+
 	    {% include "alphafilter/alphafilter_styles.html" %}
-	    
+
 	</head>
 
 You can also override the template in your project by simply creating a file called ``alphafilter_styles.html`` within a directory named ``alphafilter`` inside your projects templates directory.
@@ -152,9 +160,9 @@ The example view accepts an HttpRequest, a QuerySet, and a template name. It fin
 	        if '__istartswith' in key:
 	            qs_filter[str(key)] = request.GET[key]
 	            break
-	    
+
 	    return render_to_response(
-	        template, 
+	        template,
             {'objects': queryset.filter(**qs_filter),
             'unfiltered_objects': queryset},
 	        context_instance=RequestContext(request)

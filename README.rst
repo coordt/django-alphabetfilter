@@ -6,6 +6,8 @@ Django AlphaFilter was designed to work like Django's default ``date_hierarchy``
 
 **Changes in 0.7:**
 
+* Added a ``strip_params`` parameter to the template tag to strip out external query parameters.
+
 * Django 1.5 compatible.
 
 * Fall back to previous method of retrieving letters in Django 1.4, due to bug in Django's aggregation.
