@@ -8,17 +8,18 @@ try:
 except ImportError:
     ListView = None
 
+
 def alphafilter(request, queryset, template):
     """
     Render the template with the filtered queryset
     """
-    
+
     qs_filter = {}
     for key in request.GET.keys():
         if '__istartswith' in key:
             qs_filter[str(key)] = request.GET[key]
             break
-    
+
     return render_to_response(
         template,
         {'objects': queryset.filter(**qs_filter),
@@ -46,7 +47,7 @@ if ListView is not None:
                 if '__istartswith' in key:
                     qs_filter[str(key)] = self.request.GET[key]
                     break
-            
+
             return queryset.filter(**qs_filter)
 
         def get_context_data(self, **kwargs):

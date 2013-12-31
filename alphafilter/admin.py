@@ -1,6 +1,6 @@
 """
-This file unregisters the admin class for each model specified in 
-ALPHAFILTER_ADMIN_FIELDS and replaces it with a new admin class that 
+This file unregisters the admin class for each model specified in
+ALPHAFILTER_ADMIN_FIELDS and replaces it with a new admin class that
 subclasses both the original admin and one with an alphabet_filter attribute
 """
 

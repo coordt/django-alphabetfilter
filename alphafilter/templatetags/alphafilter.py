@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import django
 from django.utils.translation import ugettext as _
 from django.template import (Library, Node, Variable, VariableDoesNotExist,
-                            TemplateSyntaxError, RequestContext, Context)
+                             TemplateSyntaxError, RequestContext, Context)
 from django.template.loader import get_template
 
 from alphafilter.sql import FirstLetter
@@ -42,17 +42,16 @@ def _get_available_letters(field_name, queryset):
 
     Returns a set that represents the letters that exist in the database.
     """
-    if django.VERSION[1] != 4:
+    if django.VERSION[1] <= 4:
         result = queryset.values(field_name).annotate(
             fl=FirstLetter(field_name)
-            ).values('fl').distinct()
+        ).values('fl').distinct()
         return set([res['fl'] for res in result if res['fl'] is not None])
     else:
         from django.db import connection
         qn = connection.ops.quote_name
         db_table = queryset.model._meta.db_table
-        sql = "SELECT DISTINCT UPPER(SUBSTR(%s, 1, 1)) as letter FROM %s" \
-                    % (qn(field_name), qn(db_table))
+        sql = "SELECT DISTINCT UPPER(SUBSTR(%s, 1, 1)) as letter FROM %s" % (qn(field_name), qn(db_table))
         cursor = connection.cursor()
         cursor.execute(sql)
         rows = cursor.fetchall() or ()
@@ -97,7 +96,7 @@ class AlphabetFilterNode(Node):
     {% qs_alphabet_filter objects "lastname" "myapp/template.html" %}
     """
     def __init__(self, qset, field_name, filtered=None,
-        template_name="alphafilter/alphabet.html", strip_params=None):
+                 template_name="alphafilter/alphabet.html", strip_params=None):
         self.qset = Variable(qset)
         self.field_name = Variable(field_name)
         self.template_name = Variable(template_name)
@@ -137,7 +136,7 @@ class AlphabetFilterNode(Node):
             qstring = ''
 
         link = lambda d: "?%s&%s" % (qstring, "%s=%s" % d.items()[0])
-        if self.filtered == None:
+        if self.filtered is None:
             letters_used = _get_available_letters(field_name, qset)
         else:
             letters = [getattr(row, field_name)[0] for row in qset]
@@ -195,4 +194,4 @@ def qs_alphabet_filter(parser, token):
         return AlphabetFilterNode(bits[1], bits[2], bits[3], bits[4])
     else:
         raise TemplateSyntaxError("%s is called with a queryset and field "
-            "name, and optionally a template." % bits[0])
+                                  "name, and optionally a template." % bits[0])
