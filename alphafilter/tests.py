@@ -1,9 +1,6 @@
 import unittest
 from django.contrib.auth.models import User
 from django.template import Context, Template
-
-from django.test import Client
-from django.core.handlers.wsgi import WSGIRequest
 from django.test.client import RequestFactory
 
 
