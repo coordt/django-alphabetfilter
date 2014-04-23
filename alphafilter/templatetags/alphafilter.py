@@ -42,7 +42,7 @@ def _get_available_letters(field_name, queryset):
 
     Returns a set that represents the letters that exist in the database.
     """
-    if django.VERSION[1] <= 4:
+    if django.VERSION[1] >= 4:
         result = queryset.values(field_name).annotate(
             fl=FirstLetter(field_name)
         ).values('fl').distinct()
