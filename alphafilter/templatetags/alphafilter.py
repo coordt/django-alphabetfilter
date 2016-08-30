@@ -68,14 +68,13 @@ def alphabet(cl):
     field_name = cl.model_admin.alphabet_filter
     alpha_field = '%s__istartswith' % field_name
     alpha_lookup = cl.params.get(alpha_field, '')
-    link = lambda d: cl.get_query_string(d)
 
     letters_used = _get_available_letters(field_name, cl.model.objects.all())
     all_letters = list(_get_default_letters(cl.model_admin) | letters_used)
     all_letters.sort()
 
     choices = [{
-        'link': link({alpha_field: letter}),
+        'link': cl.get_query_string({alpha_field: letter}),
         'title': letter,
         'active': letter == alpha_lookup,
         'has_entries': letter in letters_used, } for letter in all_letters]
@@ -87,6 +86,13 @@ def alphabet(cl):
     }, ]
     return {'choices': all_letters + choices}
 alphabet = register.inclusion_tag('admin/alphabet.html')(alphabet)
+
+
+def make_link(qstring, d):
+    if qstring:
+        return "?%s&%s" % (qstring, "%s=%s" % d.items()[0])
+    else:
+        return "?%s=%s" % d.items()[0]
 
 
 class AlphabetFilterNode(Node):
@@ -135,7 +141,6 @@ class AlphabetFilterNode(Node):
             alpha_lookup = ''
             qstring = ''
 
-        link = lambda d: "?%s&%s" % (qstring, "%s=%s" % d.items()[0])
         if self.filtered is None:
             letters_used = _get_available_letters(field_name, qset)
         else:
@@ -148,12 +153,12 @@ class AlphabetFilterNode(Node):
         all_letters.sort()
 
         choices = [{
-            'link': link({alpha_field: letter}),
+            'link': make_link(qstring, {alpha_field: letter}),
             'title': letter,
             'active': letter == alpha_lookup,
             'has_entries': letter in letters_used, } for letter in all_letters]
         all_letters = [{
-            'link': link({alpha_field: ''}),
+            'link': make_link(qstring, {alpha_field: ''}),
             'title': _('All'),
             'active': '' == alpha_lookup,
             'has_entries': True
