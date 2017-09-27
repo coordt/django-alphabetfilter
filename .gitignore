@@ -1,11 +1,16 @@
 *.pyc
+junit*.xml
 dev.db
 local_settings.py
 media/ugc
-docs/_build/
+doc_src/_build/
 src/
 pip-log.txt
 media/js/*.r*.js
 media/css/*.r*.css
 *DS_Store
 *.egg-info
+.tox/
+.cache/
+build/
+dist/
