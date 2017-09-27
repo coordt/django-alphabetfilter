@@ -1,6 +1,7 @@
 """
 A generic view for filtering querysets via alphafilter
 """
+from builtins import str
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 try:
@@ -15,7 +16,7 @@ def alphafilter(request, queryset, template):
     """
 
     qs_filter = {}
-    for key in request.GET.keys():
+    for key in list(request.GET.keys()):
         if '__istartswith' in key:
             qs_filter[str(key)] = request.GET[key]
             break
@@ -43,7 +44,7 @@ if ListView is not None:
             self.unfiltered_queryset = queryset
 
             qs_filter = {}
-            for key in self.request.GET.keys():
+            for key in list(self.request.GET.keys()):
                 if '__istartswith' in key:
                     qs_filter[str(key)] = self.request.GET[key]
                     break

@@ -27,7 +27,7 @@ def _get_default_letters(model_admin=None):
         default_letters = model_admin.DEFAULT_ALPHABET
     if callable(default_letters):
         return set(default_letters())
-    elif isinstance(default_letters, unicode):
+    elif isinstance(default_letters, str):
         return set([x for x in default_letters])
     elif isinstance(default_letters, str):
         return set([x for x in default_letters.decode('utf8')])
@@ -90,9 +90,9 @@ alphabet = register.inclusion_tag('admin/alphabet.html')(alphabet)
 
 def make_link(qstring, d):
     if qstring:
-        return "?%s&%s" % (qstring, "%s=%s" % d.items()[0])
+        return "?%s&%s" % (qstring, "%s=%s" % list(d.items())[0])
     else:
-        return "?%s=%s" % d.items()[0]
+        return "?%s=%s" % list(d.items())[0]
 
 
 class AlphabetFilterNode(Node):
@@ -136,7 +136,7 @@ class AlphabetFilterNode(Node):
             for param in self.strip_params:
                 if param in qstring_items:
                     qstring_items.pop(param)
-            qstring = "&".join(["%s=%s" % (k, v) for k, v in qstring_items.iteritems()])
+            qstring = "&".join(["%s=%s" % (k, v) for k, v in qstring_items.items()])
         else:
             alpha_lookup = ''
             qstring = ''
