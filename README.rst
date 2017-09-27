@@ -4,6 +4,11 @@ Django AlphaFilter
 
 Django AlphaFilter was designed to work like Django's default ``date_hierarchy`` admin filter. It puts an clickable alphabet in the same location as the date hierarchy - at the top of the results list.
 
+**Changes in 1.0**
+* Only supports Django 1.9, 1.10 and 1.11
+* Supports Python 2.7 and 3.6
+* Added Tox test configuration
+
 **Changes in 0.7:**
 
 * Added a ``strip_params`` parameter to the template tag to strip out external query parameters.
