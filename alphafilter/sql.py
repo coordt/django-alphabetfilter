@@ -1,8 +1,7 @@
-from django.db.models.sql import aggregates
 from django.db.models.aggregates import Aggregate
 
 
-class FirstLetterSQL(aggregates.Aggregate):
+class FirstLetterSQL(Aggregate):
     sql_template = 'UPPER(%(function)s(%(field)s, 1, 1))'
     sql_function = 'SUBSTR'
 

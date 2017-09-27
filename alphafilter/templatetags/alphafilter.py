@@ -168,9 +168,9 @@ class AlphabetFilterNode(Node):
         tmpl = get_template(self.template_name)
 
         if request is not None:
-            return tmpl.render(RequestContext(request, ctxt))
-        else:
-            return tmpl.render(Context(ctxt))
+            ctxt = RequestContext(request, ctxt).flatten()
+
+        return tmpl.render(ctxt)
 
 
 @register.tag

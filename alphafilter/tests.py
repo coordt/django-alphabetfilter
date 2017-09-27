@@ -1,10 +1,10 @@
-import unittest
+from django.test import TestCase
 from django.contrib.auth.models import User
 from django.template import Context, Template
 from django.test.client import RequestFactory
 
 
-class AlphaFilterTestCase(unittest.TestCase):
+class AlphaFilterTestCase(TestCase):
     def setUp(self):
         usr = User.objects.create_user('sample1', 's@e.org', 'asdf')
         usr.first_name = 'Joe'
