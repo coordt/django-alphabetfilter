@@ -28,9 +28,7 @@ def _get_default_letters(model_admin=None):
     if callable(default_letters):
         return set(default_letters())
     elif isinstance(default_letters, str):
-        return set([x for x in default_letters])
-    elif isinstance(default_letters, str):
-        return set([x for x in default_letters.decode('utf8')])
+        return set(list(default_letters))
     elif isinstance(default_letters, (tuple, list)):
         return set(default_letters)
 
@@ -46,16 +44,16 @@ def _get_available_letters(field_name, queryset):
         result = queryset.values(field_name).annotate(
             fl=FirstLetter(field_name)
         ).values('fl').distinct()
-        return set([res['fl'] for res in result if res['fl'] is not None])
+        return {res['fl'] for res in result if res['fl'] is not None}
     else:
         from django.db import connection
         qn = connection.ops.quote_name
         db_table = queryset.model._meta.db_table
-        sql = "SELECT DISTINCT UPPER(SUBSTR(%s, 1, 1)) as letter FROM %s" % (qn(field_name), qn(db_table))
+        sql = f"SELECT DISTINCT UPPER(SUBSTR({qn(field_name)}, 1, 1)) as letter FROM {qn(db_table)}"
         cursor = connection.cursor()
         cursor.execute(sql)
         rows = cursor.fetchall() or ()
-        return set([row[0] for row in rows if row[0] is not None])
+        return {row[0] for row in rows if row[0] is not None}
 
 
 def alphabet(cl):
@@ -66,31 +64,31 @@ def alphabet(cl):
     if not getattr(cl.model_admin, 'alphabet_filter', False):
         return
     field_name = cl.model_admin.alphabet_filter
-    alpha_field = '%s__istartswith' % field_name
+    alpha_field = f'{field_name}__istartswith'
     alpha_lookup = cl.params.get(alpha_field, '')
 
     letters_used = _get_available_letters(field_name, cl.model.objects.all())
-    all_letters = list(_get_default_letters(cl.model_admin) | letters_used)
-    all_letters.sort()
-
+    all_letters = sorted(_get_default_letters(cl.model_admin) | letters_used)
     choices = [{
         'link': cl.get_query_string({alpha_field: letter}),
         'title': letter,
         'active': letter == alpha_lookup,
         'has_entries': letter in letters_used, } for letter in all_letters]
-    all_letters = [{
-        'link': cl.get_query_string(None, [alpha_field]),
-        'title': _('All'),
-        'active': '' == alpha_lookup,
-        'has_entries': True
-    }, ]
+    all_letters = [
+        {
+            'link': cl.get_query_string(None, [alpha_field]),
+            'title': _('All'),
+            'active': alpha_lookup == '',
+            'has_entries': True,
+        }
+    ]
     return {'choices': all_letters + choices}
 alphabet = register.inclusion_tag('admin/alphabet.html')(alphabet)
 
 
 def make_link(qstring, d):
     if qstring:
-        return "?%s&%s" % (qstring, "%s=%s" % list(d.items())[0])
+        return f'?{qstring}&{"%s=%s" % list(d.items())[0]}'
     else:
         return "?%s=%s" % list(d.items())[0]
 
@@ -107,10 +105,7 @@ class AlphabetFilterNode(Node):
         self.field_name = Variable(field_name)
         self.template_name = Variable(template_name)
         self.filtered = filtered
-        if strip_params is None:
-            self.strip_params = []
-        else:
-            self.strip_params = strip_params.split(',')
+        self.strip_params = [] if strip_params is None else strip_params.split(',')
 
     def render(self, context):
         try:
@@ -125,7 +120,7 @@ class AlphabetFilterNode(Node):
         if not field_name:
             return ''
 
-        alpha_field = '%s__istartswith' % field_name
+        alpha_field = f'{field_name}__istartswith'
         request = context.get('request', None)
 
         if request is not None:
@@ -136,7 +131,7 @@ class AlphabetFilterNode(Node):
             for param in self.strip_params:
                 if param in qstring_items:
                     qstring_items.pop(param)
-            qstring = "&".join(["%s=%s" % (k, v) for k, v in qstring_items.items()])
+            qstring = "&".join([f"{k}={v}" for k, v in qstring_items.items()])
         else:
             alpha_lookup = ''
             qstring = ''
@@ -149,20 +144,20 @@ class AlphabetFilterNode(Node):
                 alpha_lookup = letters[0]
             letters_used = set(letters)
 
-        all_letters = list(_get_default_letters(None) | letters_used)
-        all_letters.sort()
-
+        all_letters = sorted(_get_default_letters(None) | letters_used)
         choices = [{
             'link': make_link(qstring, {alpha_field: letter}),
             'title': letter,
             'active': letter == alpha_lookup,
             'has_entries': letter in letters_used, } for letter in all_letters]
-        all_letters = [{
-            'link': make_link(qstring, {alpha_field: ''}),
-            'title': _('All'),
-            'active': '' == alpha_lookup,
-            'has_entries': True
-        }, ]
+        all_letters = [
+            {
+                'link': make_link(qstring, {alpha_field: ''}),
+                'title': _('All'),
+                'active': alpha_lookup == '',
+                'has_entries': True,
+            }
+        ]
         ctxt = {'choices': all_letters + choices}
 
         tmpl = get_template(self.template_name)
@@ -189,11 +184,10 @@ def qs_alphabet_filter(parser, token):
     if len(bits) == 3:
         return AlphabetFilterNode(bits[1], bits[2])
     elif len(bits) == 4:
-        if "=" in bits[3]:
-            key, val = bits[3].split('=')
-            return AlphabetFilterNode(bits[1], bits[2], strip_params=val)
-        else:
+        if "=" not in bits[3]:
             return AlphabetFilterNode(bits[1], bits[2], template_name=bits[3])
+        key, val = bits[3].split('=')
+        return AlphabetFilterNode(bits[1], bits[2], strip_params=val)
     elif len(bits) == 5:
         key, val = bits[4].split('=')
         return AlphabetFilterNode(bits[1], bits[2], bits[3], bits[4])
